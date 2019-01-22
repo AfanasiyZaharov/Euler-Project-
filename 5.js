@@ -1,3 +1,4 @@
+
 const findMinDivider = () => {
   let i = 5040;
   while (true) {
@@ -6,7 +7,7 @@ const findMinDivider = () => {
       console.log('found', i);
       break;
     }
-    i += 2520;
+    i += (2520);
   }
 }
 
@@ -25,4 +26,6 @@ const isDividingbyOneTwoTwenty = (number) => {
   return true;
 }
 
+console.time('min divider');
 findMinDivider();
+console.timeEnd('min divider');

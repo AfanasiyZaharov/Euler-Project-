@@ -1,4 +1,6 @@
-const resultMatrix = `08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08
+const resultMatrix =
+  `
+08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08
 49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00
 81 49 31 73 55 79 14 29 93 71 40 67 53 88 30 03 49 13 36 65
 52 70 95 23 04 60 11 42 69 24 68 56 01 32 56 71 37 02 36 91
@@ -18,7 +20,7 @@ const resultMatrix = `08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 0
 20 69 36 41 72 30 23 88 34 62 99 69 82 67 59 85 74 04 36 16
 20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54
 01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48
-`.split('\n').map((stringOfNumbers) => stringOfNumbers.split(' '));
+`.split('\n').filter((arr) => arr.length > 2).map((stringOfNumbers) => stringOfNumbers.split(' '));
 
 
 const mainFunction = () => {
@@ -37,9 +39,50 @@ const mainFunction = () => {
     }
   }, []);
   console.log('badSectors', badSectors);
-
-
-  
+  findMaxHorizontalValue();
+  findMaxVerticalValue();
 }
+
+// 48477312
+const findMaxHorizontalValue = () => {
+  let result = resultMatrix.reduce((accum, arrayOfNumbers, index) => {
+    const max = arrayOfNumbers.reduce((accum, number, index, arrayOfNumbers) => {
+      if (index > arrayOfNumbers.length - 4) {
+        return accum;
+      }
+      let sum = +number * +arrayOfNumbers[index + 1] * +arrayOfNumbers[index + 2] * +arrayOfNumbers[index + 3];
+      if (sum > accum.value) {
+        return { indexStart: index, value: sum };
+      }
+      return accum;
+    }, { indexStart: null, value: 0 });
+
+    if (max.value > accum.value) {
+      return { indexesStart: { y: index, x: max.indexStart }, value: max.value };
+    }
+    return accum;
+  }, { indexesStart: null, value: 0 });
+
+  console.log('result', result);
+  return result.value;
+}
+
+const findMaxVerticalValue = () => {
+  let max = 0;
+  let coords;
+  for (let x = 0; x < resultMatrix[0].length; x++) {
+    for (let y = 0; y < resultMatrix.length - 3; y++) {
+      let sum = +resultMatrix[y][x] * +resultMatrix[y + 1][x] * +resultMatrix[y + 2][x] * +resultMatrix[y + 3][x];
+      if (sum > max) {
+        coords = { y, x };
+        max = sum;
+      }
+    }
+  }
+
+  console.log('max', max, coords);
+
+}
+
 
 mainFunction();
